@@ -22,7 +22,7 @@ class synth:
 
     #Turn LPCM generator into array
     def LPCM_arr(self,stream):
-        samples=math.ceil(sample_rate*length)
+        samples=math.ceil(self.sample_rate*self.length)
         audio=np.empty(samples).astype(np.float32)
         for i,x in enumerate(stream()):audio[i]=x
         return audio
@@ -36,7 +36,7 @@ class synth:
 def sin(freq,amp):return lambda x:amp*np.sin(freq*2*np.pi*x)
 def sawtooth(freq,amp):return lambda x:(((x%(1/freq))*freq)-.5)*2*amp
 def square(freq,amp):return lambda x:amp if (sawtooth(freq,amp)(x)>0) else -1*amp
-def triangle(freq,amp):return lambda x:sawtooth(freq,amp)*square(freq,amp)
+def triangle(freq,amp):return lambda x:2*(sawtooth(freq,amp)(x)*square(freq,amp)(x)-amp/2)
 
 f=triangle(440,1)
 sq=synth(f)
