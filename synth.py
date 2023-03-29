@@ -1,27 +1,36 @@
 import math
 import numpy as np
 from scipy.io import wavfile
-import time
+import datetime
 
 out_dir='./out'
+now=datetime.datetime.now()
+now_str=now.strftime("%Y:%m:%d:%H:%M:%S")
+out_name=out_dir+"/test_"+now_str+".wav"
 
-#LPCM stream generator
-def LPCM(f,sample_rate,length):
-    samples=math.ceil(sample_rate*length)
-    for i in range(samples):
-        yield f(i/sample_rate)
+class synth:
+    def __init__(self,f,sample_rate=44100,volume=.1,length=20):
+        self.f=lambda x:f(x)*volume
+        self.sample_rate=sample_rate
+        self.length=length
 
-#Turn LPCM generator into array
-def LPCM_arr(stream,sample_rate,length):
-    samples=math.ceil(sample_rate*length)
-    audio=np.empty(samples).astype(np.float32)
-    for i,x in enumerate(stream()):audio[i]=x
-    return audio
+    #LPCM stream generator
+    def LPCM(self):
+        samples=math.ceil(self.sample_rate*self.length)
+        for i in range(samples):
+            yield self.f(i/self.sample_rate)
 
-#Produce wav from LPCM stream
-def wav_out(filename,stream,sample_rate,length):
-    audio=LPCM_arr(stream,sample_rate,length)
-    wavfile.write(filename,sample_rate,audio)
+    #Turn LPCM generator into array
+    def LPCM_arr(self,stream):
+        samples=math.ceil(sample_rate*length)
+        audio=np.empty(samples).astype(np.float32)
+        for i,x in enumerate(stream()):audio[i]=x
+        return audio
+
+    #Produce wav from LPCM stream
+    def wav_out(self,filename):
+        audio=self.LPCM_arr(self.LPCM)
+        wavfile.write(filename,self.sample_rate,audio)
 
 #Wave generators
 def sin(freq,amp):return lambda x:amp*np.sin(freq*2*np.pi*x)
@@ -29,11 +38,6 @@ def sawtooth(freq,amp):return lambda x:(((x%(1/freq))*freq)-.5)*2*amp
 def square(freq,amp):return lambda x:amp if (sawtooth(freq,amp)(x)>0) else -1*amp
 #def triangle(freq,amp):return lambda x:
 
-length=10
-sample_rate=44100
-
-f=square(440,1)
-
-gen=lambda:LPCM(f,sample_rate,length)
-
-wav_out(out_dir+"/test.wav",gen,sample_rate,length)
+f=sin(440,1)
+sq=synth(f)
+sq.wav_out(out_name)
