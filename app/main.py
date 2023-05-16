@@ -13,9 +13,26 @@ def shepard_tone_a(freq,amp,x):
     return sum([f(x,i) for i in range(64)])
 
 def shepard_tone_b(freq,amp,x):
-    f=lambda z:amp/(z**2+1)*np.sin(freq*2*np.pi*(2**z))
+    mod_amp=lambda z:1/(z**2+1)
+    mod_freq=lambda z:2**z
+    f=lambda z:amp*mod_amp(z)*np.sin(freq*2*np.pi*mod_freq(z))
     g=lambda z,i:f(z-i)
     return sum([g(x,i) for i in range(64)])
+
+def shepard_tone_c(x,freq_start=220,freq_end=880,amp=1,duration=20):
+    mod_amp=lambda z:(-abs(z*amp*2/duration)+amp if abs(z)<duration else 0)
+    mod_freq=lambda z:(z*(freq_end-freq_start)/duration+(freq_end-freq_start)/2 if abs(z)<duration else 0)
+    f=lambda z:amp*mod_amp(z)*np.sin(2*np.pi*z*mod_freq(z))
+    g=lambda z,i:f(z-i)
+    return sum([g(x,i) for i in range(20)])
+
+def shepard_tone_d(freq,amp,x):
+    mod_amp=lambda z:1/((z/2)**2+1)
+    mod_freq=lambda z:2**z
+    f=lambda z:amp*mod_amp(z)*np.sin(freq*2*np.pi*mod_freq(z))
+    g=lambda z,i:f(z-i)
+    return sum([g(x,i) for i in range(64)])
+
 
 if __name__ == "__main__":
     out_dir='../out'
@@ -23,6 +40,6 @@ if __name__ == "__main__":
     now_str=now.strftime("%Y:%m:%d:%H:%M:%S")
     out_name=out_dir+"/test_"+now_str+".wav"
 
-    f=lambda x:shepard_tone_b(440,1,x)
+    f=lambda x:shepard_tone_d(440,1,x)
 
     audio_out(f).wav_out(out_name)
