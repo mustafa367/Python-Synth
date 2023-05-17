@@ -1,6 +1,6 @@
-import datetime
 import numpy as np
 from audio_out import audio_out
+from tone import tone
 
 #Wave generators
 def sin(freq,amp):return lambda x:amp*np.sin(freq*2*np.pi*x)
@@ -10,5 +10,6 @@ def triangle(freq,amp):return lambda x:2*(sawtooth(freq,amp)(x)*square(freq,amp)
 
 if __name__ == "__main__":
     f=sin(440,1)
-
-    s=audio_out(f).wav_out()
+    t=tone(f,t0=1)
+    f=t.get_f()
+    audio_out(f)

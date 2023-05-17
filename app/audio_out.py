@@ -1,14 +1,16 @@
+import datetime
 import math
 import numpy as np
-import datetime
 from scipy.io import wavfile
 
 class audio_out:
-    def __init__(self,f,sample_rate=44100,volume=.1,length=20,filename="../out"+"/test_"+datetime.datetime.now().strftime("%Y:%m:%d:%H:%M:%S")+".wav"):
-        self.f=lambda x:f(x/sample_rate)*volume
+    def __init__(self,f,sample_rate=44100,volume=.1,length=20,
+                 filename="../out"+"/test_"+datetime.datetime.now().strftime("%Y:%m:%d:%H:%M:%S")+".wav"):
+        self.f=lambda t:f(t/sample_rate)*volume
         self.sample_rate=sample_rate
         self.samples=math.ceil(sample_rate*length)
         self.filename=filename
+        self.wav_out()
 
     #Produce LPCM array
     def LPCM(self):
