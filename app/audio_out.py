@@ -10,6 +10,7 @@ class audio_out:
         self.samples=math.ceil(sample_rate*length)
         self.filename=filename
 
+    #Produce LPCM array
     def LPCM(self):
         audio=np.empty(self.samples).astype(np.float32)
         for i in range(self.samples):audio[i]=self.f(i)
