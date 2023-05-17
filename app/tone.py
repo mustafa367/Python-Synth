@@ -1,7 +1,7 @@
 import numpy as np
 
 class tone:
-    def __init__(self,f,volume=.5,t0=0,sustain=1,attack=1,release=1):
+    def __init__(self,f,volume=1,t0=0,sustain=100,attack=0,release=0):
         t1=t0+attack
         t2=t1+sustain
         t3=t2+release
@@ -20,3 +20,7 @@ class tone:
 
     def get_f(self):
         return self.f
+
+    def __add__(self,othertone):
+        f=lambda t:self.get_f(t)+othertone.get_f(t)
+        return tone(f)
