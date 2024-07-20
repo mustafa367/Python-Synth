@@ -3,13 +3,13 @@ from audio_out import audio_out
 from tone import tone
 
 def main():
-    f=sin(330,1)
-    tone1=tone(f)
-    g=sin(220,1)
-    tone2=tone(g)
-    tone3=tone1+tone2
+    # f=sin(330,1)
+    # tone1=tone(f)
+    # g=sin(220,1)
+    # tone2=tone(g)
+    # tone3=tone1+tone2
 
-    audio_out(tone3.get)
+    # audio_out(tone3.get)
 
 #Wave generators
 def sin(freq,amp):return lambda x:amp*np.sin(freq*2*np.pi*x)
