@@ -7,19 +7,20 @@ from tone import tone
 from audio_out import audio_out
 
 def main():
+    ## Parameters
     f0 = 220
     f1 = 880
     duration = 12
 
-    bound = lambda x: min(max(x, 0), duration)
-    f = lambda x: f0 * 2 ** (np.log2(f1 / f0) * (bound(x) / duration))
-    # A = lambda x: -1 * np.abs(2 * (bound(x) - duration / 2) / duration) + 1
+    ## Functions to define waveform
+    bound = lambda x: np.minimum(np.maximum(x, np.zeros(x.size)), np.full(x.size, duration))
+    f = lambda x: f0 * np.pow(2, (np.log2(f1 / f0) * (bound(x) / duration)))
     A = lambda x: -1 * np.abs(2 * (bound(x) - duration / 2) / duration) + 1
-    
-    base_form = lambda x: A(x)*np.sin(f(x)*x*2*np.pi)
+    base_form = lambda x: A(x) * np.sin(f(x) * x * 2 * np.pi)
 
-    X = np.arange(0, 12 , 1/44100)
-    Y = np.array([base_form(x) for x in X]).astype(np.float32)
+    ## Sampling
+    X = np.arange(0, duration , 1/44100).astype(np.float32)
+    Y = base_form(X).astype(np.float32)
 
     ## Plots to verify shape of freq and amp
     # pyplot.plot(X, [f(x) for x in X])
@@ -30,12 +31,12 @@ def main():
     # pyplot.plot(X, Y)
     # pyplot.savefig("./out/shepard_test_base_form.png")
 
-    n = 5
-    m = 24
-
     # offset = int(len(Y) / 2)
     # Z = Y + np.concat([Y[offset:],Y[:offset]])
     # out = np.concat([Y[:offset]] + [Z] * 10  + [Y[offset:]])
+
+    n = 5
+    m = 24
 
     offset = int(len(Y) / n)
     out = np.empty(Y.size * m).astype(np.float32)
