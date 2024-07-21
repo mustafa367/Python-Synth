@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.io import wavfile
+import datetime
 from tone import tone
 
 def main():
@@ -14,7 +15,7 @@ def main():
 
 def wav_write(LPCM ,sample_rate=44100,volume=.1,
                  filename="../out"+"/test_"+datetime.datetime.now().strftime("%Y:%m:%d:%H:%M:%S")+".wav"):
-    wavfile.write(self.filename,self.sample_rate, volume * LPCM)
+    wavfile.write(filename,sample_rate, volume * LPCM)
     return
 
 #Wave generators
