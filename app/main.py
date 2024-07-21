@@ -10,6 +10,12 @@ def main():
     # tone3=tone1+tone2
 
     # audio_out(tone3.get)
+    return
+
+def wav_write(LPCM ,sample_rate=44100,volume=.1,
+                 filename="../out"+"/test_"+datetime.datetime.now().strftime("%Y:%m:%d:%H:%M:%S")+".wav"):
+    wavfile.write(self.filename,self.sample_rate, volume * LPCM)
+    return
 
 #Wave generators
 def sin(freq,amp):return lambda x:amp*np.sin(freq*2*np.pi*x)
