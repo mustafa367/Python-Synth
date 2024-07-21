@@ -1,15 +1,15 @@
 import numpy as np
-from audio_out import audio_out
+from scipy.io import wavfile
 from tone import tone
 
 def main():
-    # f=sin(330,1)
-    # tone1=tone(f)
-    # g=sin(220,1)
-    # tone2=tone(g)
-    # tone3=tone1+tone2
+    f=sin(330,1)
+    tone1=tone(f)
+    g=sin(220,1)
+    tone2=tone(g)
+    tone3=tone1+tone2
 
-    # audio_out(tone3.get)
+    wav_write(tone3.get)
     return
 
 def wav_write(LPCM ,sample_rate=44100,volume=.1,
