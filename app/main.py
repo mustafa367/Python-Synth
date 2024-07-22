@@ -10,7 +10,7 @@ def main():
     ## Parameters
     f0 = 220
     f1 = 880
-    duration = 12
+    duration = 30
 
     ## Functions to define waveform
     bound = lambda x: np.minimum(np.maximum(x, np.zeros(x.size)), np.full(x.size, duration))
@@ -35,14 +35,16 @@ def main():
     # Z = Y + np.concat([Y[offset:],Y[:offset]])
     # out = np.concat([Y[:offset]] + [Z] * 10  + [Y[offset:]])
 
-    n = 5
+    n = 2
     m = 24
 
     offset = int(len(Y) / n)
-    out = np.empty(Y.size * m).astype(np.float32)
+    out = np.empty(Y.size + (m - 1) * offset).astype(np.float32)
     before = 0
     after = out.size - Y.size
     for i in range(m):
+        before = i * offset
+        after = out.size - Y.size - before
         Y_padded = np.pad(Y, (before, after), 'constant', constant_values=(0, 0))
         out = out + Y_padded
         before += offset
